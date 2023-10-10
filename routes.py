@@ -296,6 +296,17 @@ def delete_user(userid):
     page['title'] = f'List users after user {userid} has been deleted'
     return redirect(url_for('list_consolidated_users'))
 
+@app.route('/cards/delete/<cardid>')
+def delete_card(cardid):
+    '''
+    List all rows in stations join stationtypes
+    by calling the relvant database calls and pushing to the appropriate template
+    '''
+    # connect to the database and call the relevant function
+    resultval = database.delete_card(cardid)
+    page['title'] = f'List cards after user {cardid} has been deleted'
+    return redirect(url_for('list_users'))
+
 @app.route('/users/update', methods=['POST','GET'])
 def update_user():
     """

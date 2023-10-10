@@ -614,3 +614,90 @@ def search_cards_customfilter(attributename, filtertype, filterval):
 
     # return our struct
     return val
+
+def delete_card(cardid):
+    """
+    Remove a user from your system
+    """
+    # Data validation checks are assumed to have been done in route processing
+    conn = database_connect()
+    if(conn is None):
+        return None
+    cur = conn.cursor()
+    try:
+        # Try executing the SQL and get from the database
+        sql = f"""
+        DELETE
+        FROM opaltravel.opalcards
+        WHERE cardid = {cardid};
+        """
+
+        cur.execute(sql,())
+        conn.commit()                   # Commit the transaction
+        r = []
+        # r = cur.fetchone()
+        # print("return val is:")
+        # print(r)
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        return r
+    except:
+        # If there were any errors, return a NULL row printing an error to the debug
+        print("Unexpected error deleting card with cardid ",cardid, sys.exc_info()[0])
+        cur.close()                     # Close the cursor
+        conn.close()                    # Close the connection to the db
+        raise
+
+# Update a single user
+def update_single_card(cardid, cardtypeid, userid,expiry,balance):
+    # Get the database connection and set up the cursor
+    conn = database_connect()
+    if(conn is None):
+        # If a connection cannot be established, send an Null object
+        return None
+    # Set up the rows as a dictionary
+    cur = conn.cursor()
+    val = None
+
+    # Data validation checks are assumed to have been done in route processing
+
+    try:
+        setitems = ""
+        attcounter = 0
+        if cardtypeid is not None:
+            setitems += "cardtypeid = %s\n"
+            attcounter += 1
+        if userid is not None:
+            if attcounter != 0:
+                setitems += ","
+            setitems += "userid = %s\n"
+            attcounter += 1
+        if expiry is not None:
+            if attcounter != 0:
+                setitems += ","
+            setitems += "expiry = %s\n"
+            attcounter += 1
+        if balance is not None:
+            if attcounter != 0:
+                setitems += ","
+            setitems += "balance = %s\n"
+            attcounter += 1
+        # Retrieve all the information we need from the query
+        sql = f"""UPDATE opaltravel.opalcards
+                    SET {setitems}
+                    WHERE userid = {cardid};"""
+        print_sql_string(sql,(cardtypeid, userid,expiry,balance))
+        val = dictfetchone(cur,sql,(cardtypeid, userid,expiry,balance))
+        conn.commit()
+
+    except:
+        # If there are any errors, we print something nice and return a null value
+        print("Error Fetching from Database: ", sys.exc_info()[0])
+        print(sys.exc_info())
+
+    # Close our connections to prevent saturation
+    cur.close()
+    conn.close()
+
+    # return our struct
+    return val
