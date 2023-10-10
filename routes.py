@@ -125,7 +125,7 @@ def list_users():
 ########################
 
 @app.route('/cards')
-def list_users():
+def list_cards():
     '''
     List all rows in cards by calling the relvant database calls and pushing to the appropriate template
     '''
@@ -133,7 +133,7 @@ def list_users():
     cards_listdict = database.list_cards()
 
     # Handle the null condition
-    if (users_listdict is None):
+    if (cards_listdict is None):
         # Create an empty list and show error message
         cards_listdict = []
         flash('Error, there are no rows in cards')

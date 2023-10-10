@@ -504,7 +504,7 @@ def delete_user(userid):
         conn.close()                    # Close the connection to the db
         raise
 
-def list_cards()
+def list_cards():
         # Get the database connection and set up the cursor
         conn = database_connect()
         if(conn is None):
