@@ -53,7 +53,7 @@ def index():
     return render_template('welcome.html', session=session, page=page)
 
 #####################################################
-# User Login related                        
+# User Login related
 #####################################################
 # login
 @app.route('/login', methods=['POST', 'GET'])
@@ -118,7 +118,28 @@ def list_users():
         flash('Error, there are no rows in users')
     page['title'] = 'List Contents of users'
     return render_template('list_users.html', page=page, session=session, users=users_listdict)
-    
+
+
+########################
+#List All Items#
+########################
+
+@app.route('/cards')
+def list_users():
+    '''
+    List all rows in cards by calling the relvant database calls and pushing to the appropriate template
+    '''
+    # connect to the database and call the relevant function
+    cards_listdict = database.list_cards()
+
+    # Handle the null condition
+    if (users_listdict is None):
+        # Create an empty list and show error message
+        cards_listdict = []
+        flash('Error, there are no rows in cards')
+    page['title'] = 'List Contents of cards'
+    return render_template('list_cards.html', page=page, session=session, cards=cards_listdict)
+
 
 ########################
 #List Single Items#
@@ -128,7 +149,7 @@ def list_users():
 @app.route('/users/<userid>')
 def list_single_users(userid):
     '''
-    List all rows in users that match a particular id attribute userid by calling the 
+    List all rows in users that match a particular id attribute userid by calling the
     relevant database calls and pushing to the appropriate template
     '''
 
@@ -152,7 +173,7 @@ def list_single_users(userid):
 @app.route('/consolidated/users')
 def list_consolidated_users():
     '''
-    List all rows in users join userroles 
+    List all rows in users join userroles
     by calling the relvant database calls and pushing to the appropriate template
     '''
     # connect to the database and call the relevant function
@@ -194,7 +215,7 @@ def search_users_byname():
         print(fnamesearch)
         lnamesearch = database.search_users_customfilter("lastname","~",request.form['searchterm'])
         print(lnamesearch)
-        
+
         users_listdict = None
 
         if((fnamesearch == None) and (lnamesearch == None)):
@@ -206,7 +227,7 @@ def search_users_byname():
             flash(f"No items found for searchterm: {request.form['searchterm']}")
             return redirect(url_for('index'))
         else:
-            
+
             users_listdict = fnamesearch
             users_listdict.extend(lnamesearch)
             # Handle the null condition'
@@ -217,20 +238,20 @@ def search_users_byname():
                 flash('Error, there are no rows in users that match the searchterm '+request.form['searchterm'])
             page['title'] = 'Search for a User by name'
             return render_template('list_users.html', page=page, session=session, users=users_listdict)
-            
+
 
     else:
         return redirect(url_for('/users'))
-        
+
 @app.route('/users/delete/<userid>')
 def delete_user(userid):
     '''
-    List all rows in stations join stationtypes 
+    List all rows in stations join stationtypes
     by calling the relvant database calls and pushing to the appropriate template
     '''
     # connect to the database and call the relevant function
     resultval = database.delete_user(userid)
-    
+
     # users_listdict = database.list_users()
 
     # # Handle the null condition
@@ -240,7 +261,7 @@ def delete_user(userid):
     #     flash('Error, there are no rows in stations_stationtypes_listdict')
     page['title'] = f'List users after user {userid} has been deleted'
     return redirect(url_for('list_consolidated_users'))
-    
+
 @app.route('/users/update', methods=['POST','GET'])
 def update_user():
     """
@@ -249,7 +270,7 @@ def update_user():
     # # Check if the user is logged in, if not: back to login.
     if('logged_in' not in session or not session['logged_in']):
         return redirect(url_for('login'))
-    
+
     # Need a check for isAdmin
 
     page['title'] = 'Update user details'
@@ -318,7 +339,7 @@ def update_user():
 ## add items
 ######
 
-    
+
 @app.route('/users/add', methods=['POST','GET'])
 def add_user():
     """
@@ -327,7 +348,7 @@ def add_user():
     # # Check if the user is logged in, if not: back to login.
     if('logged_in' not in session or not session['logged_in']):
         return redirect(url_for('login'))
-    
+
     # Need a check for isAdmin
 
     page['title'] = 'Add user details'
@@ -341,7 +362,7 @@ def add_user():
     if(request.method == 'POST'):
 
         # verify that the values are available:
-        
+
         if ('firstname' not in request.form):
             newdict['firstname'] = 'Empty firstname'
         else:
