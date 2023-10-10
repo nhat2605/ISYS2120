@@ -45,6 +45,7 @@
                         <select id="searchtarget" name="searchtarget">
                           {% if session.logged_in %}
                             <option value="{{ url_for('search_users_byname' ) }}" selected>Users</option>
+                            <option value="{{ url_for('search_cards_byexpiry' ) }}" selected>Cards</option>
                           {% endif %}
                           <!-- TODO uncomment the next line by removing the brace+hashtag to add this menu option -->
                         </select>

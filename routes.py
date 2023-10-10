@@ -243,6 +243,40 @@ def search_users_byname():
     else:
         return redirect(url_for('/users'))
 
+@app.route('/cards/search', methods=['POST', 'GET'])
+def search_cards_byexpiry():
+    '''
+    List all rows in cards that match a particular expiry
+    by calling the relevant database calls and pushing to the appropriate template
+    '''
+    if(request.method == 'POST'):
+
+        expirysearch = database.search_cards_customfilter("expiry","=",request.form['searchterm'])
+        print(expirysearch)
+
+        cards_listdict = None
+
+        if (expirysearch == None):
+            errortext = "Error with the database connection."
+            errortext += "Please check your terminal and make sure you updated your INI files."
+            flash(errortext)
+            return redirect(url_for('index'))
+        if(expirysearch == None) or (expirysearch < 1):
+            flash(f"No items found for searchterm: {request.form['searchterm']}")
+            return redirect(url_for('index'))
+        else:
+            cards_listdict = expirysearch
+            # Handle the null condition'
+            print(cards_listdict)
+            if (cards_listdict is None or len(cards_listdict) == 0):
+                # Create an empty list and show error message
+                cards_listdict = []
+                flash('Error, there are no rows in cards that match the searchterm '+request.form['searchterm'])
+            page['title'] = 'Search for a Card by expiry'
+            return render_template('list_cards.html', page=page, session=session, cards=cards_listdict)
+    else:
+        return redirect(url_for('/cards'))
+
 @app.route('/users/delete/<userid>')
 def delete_user(userid):
     '''

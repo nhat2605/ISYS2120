@@ -573,3 +573,44 @@ def add_card_insert(cardtypeid, userid, expiry, balance):
         cur.close()                     # Close the cursor
         conn.close()                    # Close the connection to the db
         raise
+
+####################################
+##  Search Items - inexact matches #
+####################################
+
+# Search for cards with a custom filter
+# filtertype can be: '=', '<', '>', '<>', '~', 'LIKE'
+def search_cards_customfilter(attributename, filtertype, filterval):
+    # Get the database connection and set up the cursor
+    conn = database_connect()
+    if(conn is None):
+        # If a connection cannot be established, send an Null object
+        return None
+    # Set up the rows as a dictionary
+    cur = conn.cursor()
+    val = None
+
+    # arrange like filter
+    filtervalprefix = ""
+    filtervalsuffix = ""
+    if str.lower(filtertype) == "like":
+        filtervalprefix = "'%"
+        filtervalsuffix = "%'"
+
+    try:
+        # Retrieve all the information we need from the query
+        sql = f"""SELECT *
+                    FROM opaltravel.opalcards
+                    WHERE lower({attributename}) {filtertype} {filtervalprefix}lower(%s){filtervalsuffix} """
+        print_sql_string(sql, (filterval,))
+        val = dictfetchall(cur,sql,(filterval,))
+    except:
+        # If there are any errors, we print something nice and return a null value
+        print("Error Fetching from Database: ", sys.exc_info()[0])
+
+    # Close our connections to prevent saturation
+    cur.close()
+    conn.close()
+
+    # return our struct
+    return val
