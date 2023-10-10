@@ -461,15 +461,15 @@ def update_card():
 
         if validupdate:
             #forward to the database to manage update
-            userslist = database.update_single_card(newdict['userid'],newdict['firstname'],newdict['lastname'],newdict['userroleid'],newdict['password'])
+            userslist = database.update_single_card(newdict['cardid'],newdict['userid'],newdict['userid'],newdict['expiry'],newdict['balance'])
         else:
             # no updates
             flash("No updated values for user with cardid")
             return redirect(url_for('list_cards'))
         # Should redirect to your newly updated user
-        return list_single_users(newdict['userid'])
+        return list_single_cards(newdict['cardid'])
     else:
-        return redirect(url_for('list_consolidated_users'))
+        return redirect(url_for('list_cards'))
 
 ######
 ## add items
