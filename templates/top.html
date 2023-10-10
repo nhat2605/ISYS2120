@@ -28,10 +28,11 @@
         <!-- Generating the menu and what happens when the user is logged in VS logged out -->
         <div id="header" class="pure-menu pure-menu-horizontal pure-menu-scrollable">
             <a href="/" class="pure-menu-heading pure-menu-link">Travel</a>
-            
-            <ul class="pure-menu-list">        
+
+            <ul class="pure-menu-list">
                 {% if session.logged_in %}
                   <li class="pure-menu-item"><a href="{{ url_for('list_users') }}" class="pure-menu-link">Users</a></li>
+                  <li class="pure-menu-item"><a href="{{ url_for('list_cards') }}" class="pure-menu-link">Cards</a></li>
                   <li class="pure-menu-item"><a href="{{ url_for('list_consolidated_users') }}" class="pure-menu-link">User Details</a></li>
                   <li class="pure-menu-item"><a href="{{ url_for('list_user_stats') }}" class="pure-menu-link">User Stats</a></li>
                 {% endif %}
@@ -44,7 +45,7 @@
                         <select id="searchtarget" name="searchtarget">
                           {% if session.logged_in %}
                             <option value="{{ url_for('search_users_byname' ) }}" selected>Users</option>
-                          {% endif %}                          
+                          {% endif %}
                           <!-- TODO uncomment the next line by removing the brace+hashtag to add this menu option -->
                         </select>
                         <button type="submit" class="pure-button">Search</button>
@@ -52,7 +53,7 @@
                   </div>
                 </li>
             </ul>
-            
+
             <!-- <div id="top-dbuser">{{ page.dbuser }}</div> -->
         </div>
         <!--
