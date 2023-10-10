@@ -165,6 +165,24 @@ def list_single_users(userid):
     page['title'] = 'List Single userid for users'
     return render_template('list_users.html', page=page, session=session, users=users_listdict)
 
+@app.route('/cards/<cardid>')
+def list_single_cards(cardid):
+    '''
+    List all rows in cards that match a particular id attribute userid by calling the
+    relevant database calls and pushing to the appropriate template
+    '''
+
+    # connect to the database and call the relevant function
+    cards_listdict = None
+    cards_listdict = database.search_cards_customfilter("cardid", "=", cardid)
+
+    # Handle the null condition
+    if (cards_listdict is None or len(cards_listdict) == 0):
+        # Create an empty list and show error message
+        cards_listdict = []
+        flash('Error, there are no rows in cards that match the attribute "cardid" for the value '+cardid)
+    page['title'] = 'List Single cardid for cards'
+    return render_template('list_cards.html', page=page, session=session, cards=cards_listdict)
 
 ########################
 #List Search Items#
@@ -375,6 +393,79 @@ def update_user():
             # no updates
             flash("No updated values for user with userid")
             return redirect(url_for('list_users'))
+        # Should redirect to your newly updated user
+        return list_single_users(newdict['userid'])
+    else:
+        return redirect(url_for('list_consolidated_users'))
+
+@app.route('/cards/update', methods=['POST','GET'])
+def update_card():
+    """
+    Update details for a user
+    """
+    # # Check if the user is logged in, if not: back to login.
+    if('logged_in' not in session or not session['logged_in']):
+        return redirect(url_for('login'))
+
+    # Need a check for isAdmin
+
+    page['title'] = 'Update user details'
+
+    cardslist = None
+    print("request form is:")
+    newdict = {}
+    print(request.form)
+    validupdate = False
+    # Check your incoming parameters
+    if(request.method == 'POST'):
+
+        # verify that the values are available:
+        if ('cardid' not in request.form):
+            # should be an exit condition
+            flash("Can not update without a cardid")
+            return redirect(url_for('list_cards'))
+        else:
+            newdict['cardid'] = request.form['cardid']
+            print("We have a value: ",newdict['cardid'])
+
+        if ('cardtypeid' not in request.form):
+            newdict['cardtypeid'] = None
+        else:
+            validupdate = True
+            newdict['cardtypeid'] = request.form['cardtypeid']
+            print("We have a value: ",newdict['cardtypeid'])
+
+        if ('userid' not in request.form):
+            newdict['userid'] = None
+        else:
+            validupdate = True
+            newdict['userid'] = request.form['userid']
+            print("We have a value: ",newdict['userid'])
+
+        if ('expiry' not in request.form):
+            newdict['expiry'] = None
+        else:
+            validupdate = True
+            newdict['expiry'] = request.form['expiry']
+            print("We have a value: ",newdict['expiry'])
+
+        if ('balance' not in request.form):
+            newdict['balance'] = None
+        else:
+            validupdate = True
+            newdict['balance'] = request.form['balance']
+            print("We have a value: ",newdict['balance'])
+
+        print('Update dict is:')
+        print(newdict, validupdate)
+
+        if validupdate:
+            #forward to the database to manage update
+            userslist = database.update_single_card(newdict['userid'],newdict['firstname'],newdict['lastname'],newdict['userroleid'],newdict['password'])
+        else:
+            # no updates
+            flash("No updated values for user with cardid")
+            return redirect(url_for('list_cards'))
         # Should redirect to your newly updated user
         return list_single_users(newdict['userid'])
     else:
