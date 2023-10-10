@@ -685,7 +685,7 @@ def update_single_card(cardid, cardtypeid, userid,expiry,balance):
         # Retrieve all the information we need from the query
         sql = f"""UPDATE opaltravel.opalcards
                     SET {setitems}
-                    WHERE userid = {cardid};"""
+                    WHERE cardid = {cardid};"""
         print_sql_string(sql,(cardtypeid, userid,expiry,balance))
         val = dictfetchone(cur,sql,(cardtypeid, userid,expiry,balance))
         conn.commit()
