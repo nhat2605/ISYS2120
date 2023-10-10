@@ -461,7 +461,7 @@ def update_card():
 
         if validupdate:
             #forward to the database to manage update
-            userslist = database.update_single_card(newdict['cardid'],newdict['userid'],newdict['userid'],newdict['expiry'],newdict['balance'])
+            cardlist = database.update_single_card(newdict['cardid'],newdict['cardtypeid'],newdict['userid'],newdict['expiry'],newdict['balance'])
         else:
             # no updates
             flash("No updated values for user with cardid")
