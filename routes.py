@@ -261,7 +261,7 @@ def search_cards_byexpiry():
             errortext += "Please check your terminal and make sure you updated your INI files."
             flash(errortext)
             return redirect(url_for('index'))
-        if(expirysearch == None) or (expirysearch < 1):
+        if(expirysearch == None) or (len(expirysearch) < 1):
             flash(f"No items found for searchterm: {request.form['searchterm']}")
             return redirect(url_for('index'))
         else:

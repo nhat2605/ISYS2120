@@ -601,7 +601,7 @@ def search_cards_customfilter(attributename, filtertype, filterval):
         # Retrieve all the information we need from the query
         sql = f"""SELECT *
                     FROM opaltravel.opalcards
-                    WHERE lower({attributename}) {filtertype} {filtervalprefix}lower(%s){filtervalsuffix} """
+                    WHERE {attributename} {filtertype} {filtervalprefix}%s{filtervalsuffix} """
         print_sql_string(sql, (filterval,))
         val = dictfetchall(cur,sql,(filterval,))
     except:
