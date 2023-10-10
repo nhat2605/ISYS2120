@@ -6,10 +6,10 @@
 
         <!-- -- Users: userid, cardid, firstname, lastname, preferredname, userroleid, password
             CREATE TABLE Users (
-                userid serial PRIMARY KEY,  
-                firstname text, 
-                lastname text, 
-                userroleid bigint REFERENCES UserRoles(userroleid) NOT NULL, 
+                userid serial PRIMARY KEY,
+                firstname text,
+                lastname text,
+                userroleid bigint REFERENCES UserRoles(userroleid) NOT NULL,
                 password text NOT NULL
             );
 
@@ -23,7 +23,7 @@
 
             <label for="firstname">First name:</label>
             <input type="text" id="firstname" name="firstname" value="New" placeholder="Enter firstname here">
-            
+
             <label for="lastname">Last name:</label>
             <input type="text" id="lastname" name="lastname" value="User" placeholder="Enter lastname here">
             <br/>
@@ -42,12 +42,12 @@
             <hr/>
             <hr/>
             <hr/>
-            
+
 
         </form>
         <br/>
         <div>
- 
+
         <br/>
         <div>
 

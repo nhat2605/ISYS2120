@@ -537,7 +537,7 @@ def list_cards():
 
 def add_card_insert(cardtypeid, userid, expiry, balance):
     """
-    Add a new User to the system
+    Add a new Card to the system
     """
     # Data validation checks are assumed to have been done in route processing
 
@@ -549,7 +549,7 @@ def add_card_insert(cardtypeid, userid, expiry, balance):
         INSERT into opaltravel.opalcards(cardtypeid, userid, expiry, balance)
         VALUES (%s,%s,%s,%s);
         """
-    print_sql_string(sql, (firstname, lastname,userroleid,password))
+    print_sql_string(sql, (cardtypeid, userid, expiry, balance))
     try:
         # Try executing the SQL and get from the database
         sql = """
@@ -557,7 +557,7 @@ def add_card_insert(cardtypeid, userid, expiry, balance):
         VALUES (%s,%s,%s,%s);
         """
 
-        cur.execute(sql,(firstname, lastname,userroleid,password))
+        cur.execute(sql,(cardtypeid, userid, expiry, balance))
 
         # r = cur.fetchone()
         r=[]
@@ -569,7 +569,7 @@ def add_card_insert(cardtypeid, userid, expiry, balance):
         return r
     except:
         # If there were any errors, return a NULL row printing an error to the debug
-        print("Unexpected error adding a user:", sys.exc_info()[0])
+        print("Unexpected error adding a card:", sys.exc_info()[0])
         cur.close()                     # Close the cursor
         conn.close()                    # Close the connection to the db
         raise
@@ -701,3 +701,34 @@ def update_single_card(cardid, cardtypeid, userid,expiry,balance):
 
     # return our struct
     return val
+
+def list_cardtype():
+    # Get the database connection and set up the cursor
+    conn = database_connect()
+    if(conn is None):
+        # If a connection cannot be established, send an Null object
+        return None
+    # Set up the rows as a dictionary
+    cur = conn.cursor()
+    returndict = None
+
+    try:
+        # Set-up our SQL query
+        sql = """SELECT *
+                    FROM opaltravel.cardtypes """
+
+        # Retrieve all the information we need from the query
+        returndict = dictfetchall(cur,sql)
+
+        # report to the console what we recieved
+        print(returndict)
+    except:
+        # If there are any errors, we print something nice and return a null value
+        print("Error Fetching from Database", sys.exc_info()[0])
+
+    # Close our connections to prevent saturation
+    cur.close()
+    conn.close()
+
+    # return our struct
+    return returndict

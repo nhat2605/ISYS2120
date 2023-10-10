@@ -445,3 +445,64 @@ def add_user():
                            session=session,
                            page=page,
                            userroles=database.list_userroles())
+
+@app.route('/cards/add', methods=['POST','GET'])
+def add_card():
+    """
+    Add a new Card
+    """
+    # # Check if the user is logged in, if not: back to login.
+    if('logged_in' not in session or not session['logged_in']):
+        return redirect(url_for('login'))
+
+    # Need a check for isAdmin
+
+    page['title'] = 'Add card details'
+
+    cardlist = None
+    print("request form is:")
+    newdict = {}
+    print(request.form)
+
+    # Check your incoming parameters
+    if(request.method == 'POST'):
+
+        # verify that the values are available:
+
+        if ('cardtypeid' not in request.form):
+            newdict['cardtypeid'] = 1 #Default is 1 (addult)
+        else:
+            newdict['cardtypeid'] = request.form['cardtypeid']
+            print("We have a value: ",newdict['cardtypeid'])
+
+        if ('userid' not in request.form):
+            newdict['lastname'] = 'Empty userid'
+        else:
+            newdict['userid'] = request.form['userid']
+            print("We have a value: ",newdict['userid'])
+
+        if ('expiry' not in request.form):
+            newdict['expiry'] = '01-01-0001' # default is expired
+        else:
+            newdict['expiry'] = request.form['expiry']
+            print("We have a value: ",newdict['expiry'])
+
+        if ('balance' not in request.form):
+            newdict['balance'] = 0
+        else:
+            newdict['balance'] = request.form['balance']
+            print("We have a value: ",newdict['balance'])
+
+        print('Insert parametesrs are:')
+        print(newdict)
+
+        database.add_card_insert(newdict['cardtypeid'],newdict['userid'],newdict['expiry'],newdict['balance'])
+        # Should redirect to your newly updated user
+        print("did it go wrong here?")
+        return redirect(url_for('list_cards'))
+    else:
+        # assuming GET request, need to setup for this
+        return render_template('add_card.html',
+                           session=session,
+                           page=page,
+                           cardtype=database.list_userroles())
