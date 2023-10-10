@@ -323,7 +323,7 @@ def delete_card(cardid):
     # connect to the database and call the relevant function
     resultval = database.delete_card(cardid)
     page['title'] = f'List cards after user {cardid} has been deleted'
-    return redirect(url_for('list_users'))
+    return redirect(url_for('list_cards'))
 
 @app.route('/users/update', methods=['POST','GET'])
 def update_user():
