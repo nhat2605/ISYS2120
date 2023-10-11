@@ -614,3 +614,25 @@ def add_card():
                            page=page,
                            cardtypes=database.list_cardtype(),
                            users=database.list_users())
+
+@app.route('/get_expiry_suggestions', methods=['GET'])
+def get_expiry_suggestions():
+    user_input = request.args.get('date')
+    try:
+        datetime.strptime(user_input, '%Y-%m-%d').date()
+    except ValueError:
+        return jsonify([])
+
+    # Get expiry dates from the database
+    card_stats = list_card_stats()
+    if card_stats is None:
+        return jsonify([])
+
+    # Filter and sort the expiry dates based on user input
+    expiry_dates = [item['expiry'] for item in card_stats]
+    sorted_dates = sorted(expiry_dates, key=lambda x: abs((datetime.strptime(x, '%Y-%m-%d').date() - datetime.strptime(user_input, '%Y-%m-%d').date()).days))
+
+    # Limit to top 3 closest expiry dates
+    suggestions = sorted_dates[:3]
+
+    return jsonify(suggestions)

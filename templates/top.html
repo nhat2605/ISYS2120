@@ -22,6 +22,28 @@
 
             }
         </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#searchterm").on("input", function() {
+                    var query = $(this).val();
+                    if (query.length > 0) {
+                        $.ajax({
+                            url: "/get_expiry_suggestions",
+                            type: "GET",
+                            data: { 'date': query },
+                            success: function(data) {
+                                var dataList = $("#expiry-dates");
+                                dataList.empty();
+                                for (var i = 0; i < data.length; i++) {
+                                    dataList.append("<option value='" + data[i] + "'>");
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
         <title>{{ page.title }}</title>
     </head>
     <body>
@@ -40,8 +62,9 @@
                 <li class="pure-menu-item"><a href="{{ url_for('logout')}}" class="pure-menu-link">Logout</a></li>
                 <li class="pure-menu-item">
                   <div style="float:right">
-                    <form name="searchform" class="Search" method="POST" action="" onsubmit="getsearchtarget()" >
-                        <input type="text" name="searchterm" placeholder="Search Term" autofocus required>
+                      <form name="searchform" class="Search" method="POST" action="" onsubmit="getsearchtarget()" >
+                          <input type="date" id="searchterm" name="searchterm" placeholder="Search Term" autofocus required list="expiry-dates">
+                          <datalist id="expiry-dates"></datalist>
                         <br/>
                         <select id="searchtarget" name="searchtarget">
                           {% if session.logged_in %}
