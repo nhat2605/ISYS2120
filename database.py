@@ -749,7 +749,7 @@ def list_card_stats():
         sql = """SELECT expiry, COUNT(*) as count
                 FROM opaltravel.opalcards
                     GROUP BY expiry
-                    ORDER BY expiry;"""
+                    ORDER BY expiry DESC;"""
 
         # Retrieve all the information we need from the query
         returndict = dictfetchall(cur,sql)
