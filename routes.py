@@ -221,6 +221,22 @@ def list_user_stats():
     page['title'] = 'User Stats'
     return render_template('list_user_stats.html', page=page, session=session, users=user_stats)
 
+@app.route('/card_stats')
+def list_card_stats():
+    '''
+    List some card stats
+    '''
+    # connect to the database and call the relevant function
+    card_stats = database.list_card_stats()
+
+    # Handle the null condition
+    if (card_stats is None):
+        # Create an empty list and show error message
+        card_stats = []
+        flash('Error, there are no rows in card_stats')
+    page['title'] = 'Card Stats'
+    return render_template('list_card_stats.html', page=page, session=session, cards=card_stats)
+
 @app.route('/users/search', methods=['POST', 'GET'])
 def search_users_byname():
     '''
@@ -567,7 +583,7 @@ def add_card():
             print("We have a value: ",newdict['cardtypeid'])
 
         if ('userid' not in request.form):
-            newdict['lastname'] = 'Empty userid'
+            newdict['userid'] = 'Empty userid'
         else:
             newdict['userid'] = request.form['userid']
             print("We have a value: ",newdict['userid'])
