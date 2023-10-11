@@ -596,4 +596,5 @@ def add_card():
         return render_template('add_card.html',
                            session=session,
                            page=page,
-                           cardtype=database.list_userroles())
+                           cardtypes=database.list_cardtype(),
+                           users=database.list_users())
