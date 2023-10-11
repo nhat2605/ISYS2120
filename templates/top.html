@@ -27,7 +27,10 @@
             $(document).ready(function() {
                 $("#searchterm").on("input", function() {
                     var query = $(this).val();
-                    if (query.length > 0) {
+                    var selectedTarget = $("#searchtarget").val();
+
+                    // Only send AJAX request if "Cards" is selected and query is not empty
+                    if (selectedTarget === "{{ url_for('search_cards_byexpiry') }}" && query.length > 0) {
                         $.ajax({
                             url: "/get_expiry_suggestions",
                             type: "GET",
@@ -40,6 +43,9 @@
                                 }
                             }
                         });
+                    } else {
+                        // Clear the datalist if "Users" is selected or query is empty
+                        $("#expiry-dates").empty();
                     }
                 });
             });
