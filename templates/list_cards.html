@@ -53,9 +53,15 @@
                 <td><b> {{item['cardid']}} </b></td>
                 <td> {{item['cardtypeid']}}</td>
                 <td> {{item['userid']}}</td>
-                <td> {{item['expiry']}}</td>
                 <td>
-                    {% if session['userid']|string == item['userid']|string %}  <!-- Convert both to string for comparison -->
+                    {% if session['userid']|string == item['userid']|string %}
+                        {{item['expiry']}}
+                    {% else %}
+                        Not Authorized
+                    {% endif %}
+                </td>
+                <td>
+                    {% if session['userid']|string == item['userid']|string %}
                         {{item['balance']}}
                     {% else %}
                         Not Authorized
