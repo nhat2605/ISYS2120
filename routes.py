@@ -138,6 +138,7 @@ def list_cards():
         cards_listdict = []
         flash('Error, there are no rows in cards')
     page['title'] = 'List Contents of cards'
+    print(session)
     return render_template('list_cards.html', page=page, session=session, cards=cards_listdict)
 
 
