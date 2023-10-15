@@ -55,7 +55,7 @@
                 <td> {{item['userid']}}</td>
                 <td> {{item['expiry']}}</td>
                 <td>
-                    {% if session['userid'] == item['userid'] %}  <!-- Assuming the session has 'userid' -->
+                    {% if session['userid']|string == item['userid']|string %}  <!-- Convert both to string for comparison -->
                         {{item['balance']}}
                     {% else %}
                         Not Authorized
