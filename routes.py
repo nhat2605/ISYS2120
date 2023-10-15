@@ -137,6 +137,11 @@ def list_cards():
         # Create an empty list and show error message
         cards_listdict = []
         flash('Error, there are no rows in cards')
+
+    if session.get('isadmin') == False:
+        user_id = session.get('userid')  # Assuming the 'userid' is stored in the session
+        cards_listdict = [card for card in cards_listdict if card['userid'] == user_id]
+
     page['title'] = 'List Contents of cards'
     return render_template('list_cards.html', page=page, session=session, cards=cards_listdict)
 
