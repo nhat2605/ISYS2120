@@ -1,7 +1,8 @@
-    {% include 'top.html' %}
-    
-    <div id="content">
-        <h1 class="page-title">User statistics</h1>
+{% include 'top.html' %}
+
+<div id="content">
+    {% if session['isadmin'] == True %}
+        <h1 class="page-title">User Statistics</h1>
         <br/>
         <table class="pure-table">
             <thead>
@@ -11,15 +12,17 @@
                 </tr>
             </thead>
             <tbody>
-            {% for item in users %}
-                <tr>
-                    <td> {{item['userroleid']}}</td>
-                    <td> {{item['count']}}</td>
-                </tr>
-            {% endfor %}
+                {% for item in users %}
+                    <tr>
+                        <td> {{item['userroleid']}}</td>
+                        <td> {{item['count']}}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
-    </div>
-    </body>
-    </html>
-    
+    {% else %}
+        <h1 class="page-title" style="color: red; font-size: 3em;">Not Authorized</h1>
+    {% endif %}
+</div>
+</body>
+</html>
