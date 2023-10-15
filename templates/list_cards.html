@@ -50,11 +50,17 @@
                         </td>
                     </form>
                 {% else %}
-                    <td><b> {{item['cardid']}} </b></td>
-                    <td> {{item['cardtypeid']}}</td>
-                    <td> {{item['userid']}}</td>
-                    <td> {{item['expiry']}}</td>
-                    <td> Admin only</td>
+                <td><b> {{item['cardid']}} </b></td>
+                <td> {{item['cardtypeid']}}</td>
+                <td> {{item['userid']}}</td>
+                <td> {{item['expiry']}}</td>
+                <td>
+                    {% if session['userid'] == item['userid'] %}  <!-- Assuming the session has 'userid' -->
+                        {{item['balance']}}
+                    {% else %}
+                        Not Authorized
+                    {% endif %}
+                </td>
                 {% endif %}
             </tr>
         {% endfor %}
