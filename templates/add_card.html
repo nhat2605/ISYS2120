@@ -1,43 +1,60 @@
 {% include 'top.html' %}
-<div class="content">
-    <div class="container details">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Card</title>
+</head>
+<body onload="setMinDate()">
 
-        <h2 class="title"> Add Card </h2>
+    <div class="content">
+        <div class="container details">
 
-        <!--
-            Card: cardid, cardtypeid, userid, expiry, balance
-            Assuming that cardtypeid and userid are foreign keys that need to be selected from existing types and users.
-        -->
-        <form class="Add" method="POST" action="{{url_for('add_card')}}">
+            <h2 class="title"> Add Card </h2>
 
-            <label for="cardtypeid">Card Type:</label>
-            <select id="cardtypeid" name="cardtypeid">
-                {% for type in cardtypes %}
-                    <option value="{{type['cardtypeid']}}">{{type['typename']}}</option>
-                {% endfor %}
-            </select>
-            <br/>
+            <form class="Add" method="POST" action="{{url_for('add_card')}}">
 
-            <label for="userid">User:</label>
-            <select id="userid" name="userid">
-                {% for user in users %}
-                    <option value="{{user['userid']}}">{{user['firstname']}} {{user['lastname']}}</option>
-                {% endfor %}
-            </select>
-            <br/>
+                <label for="cardtypeid">Card Type:</label>
+                <select id="cardtypeid" name="cardtypeid">
+                    {% for type in cardtypes %}
+                        <option value="{{type['cardtypeid']}}">{{type['typename']}}</option>
+                    {% endfor %}
+                </select>
+                <br/>
 
-            <label for="expiry">Expiry Date:</label>
-            <input type="date" id="expiry" name="expiry" placeholder="Enter expiry date here">
-            <br/>
+                <label for="userid">User:</label>
+                <select id="userid" name="userid">
+                    {% for user in users %}
+                        <option value="{{user['userid']}}">{{user['firstname']}} {{user['lastname']}}</option>
+                    {% endfor %}
+                </select>
+                <br/>
 
-            <label for="balance">Balance:</label>
-            <input type="number" id="balance" name="balance" placeholder="Enter balance here">
-            <br/>
+                <label for="expiry">Expiry Date:</label>
+                <input type="date" id="expiry" name="expiry" placeholder="Enter expiry date here">
+                <br/>
 
-            <button class="pure-button pure-button-primary" type="submit">Add</button>
-        </form>
+                <label for="balance">Balance:</label>
+                <input type="number" id="balance" name="balance" placeholder="Enter balance here">
+                <br/>
 
+                <button class="pure-button pure-button-primary" type="submit">Add</button>
+            </form>
+
+        </div>
     </div>
-</div>
+
+    <script>
+        // Function to set the minimum date to today
+        function setMinDate() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
+            var yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById("expiry").min = today;
+        }
+    </script>
+
 </body>
 </html>

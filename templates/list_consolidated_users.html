@@ -1,12 +1,12 @@
-    {% include 'top.html' %}
-    
+f    {% include 'top.html' %}
+
     <div id="content">
         <h1 class="page-title">Details of Users (consolidated)</h1>
         {% if session['isadmin'] == True %}
             <div style="float: left;">
                 <button class="pure-button" ><a href="{{ url_for('add_user') }}" class="pure-menu-link">Add User</a></button>
-               
-            </div>            
+
+            </div>
         {% endif %}
         <br/>
         <table class="pure-table">
@@ -39,11 +39,11 @@
             {% for item in users %}
                 <tr>
                     {% if session['isadmin'] == True %}
-                    
-                        <td> 
+
+                        <td>
                             {% if item['isadmin'] == True %}
                                 <button disabled class="pure-button" onclick="alert('Even an Admin shouldnot delete an admin')"><a aria-disabled="true" class="pure-menu-link">Delete</a></button>
-                                
+
                             {% else %}
                                 <button class="pure-button" ><a disabled href="{{ url_for('delete_user', userid=item.userid) }}" class="pure-menu-link">Delete</a></button>
                             {% endif %}
@@ -74,7 +74,7 @@
                         <td> {{item['rolename']}}</td>
                         <td> Hidden</td>
                         <td> Hidden</td>
-                    {% endif %} 
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -82,4 +82,3 @@
     </div>
     </body>
     </html>
-    
