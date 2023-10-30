@@ -1,77 +1,101 @@
 {% include 'top.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cards List Contents</title>
+    <script>
+        // Function to set the minimum date to today for multiple elements
+        function setMinDates() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
+            var yyyy = today.getFullYear();
+            today = yyyy + '-' + mm + '-' + dd;
 
-<div id="content">
-    <h1 class="page-title">Cards List Contents</h1>
-    {% if session['isadmin'] == True %}
-        <div style="float: left;">
-            <button class="pure-button" style="float: center;"><a href="{{ url_for('add_card') }}" class="pure-menu-link">Add Card</a></button>
-        </div>
-    {% endif %}
-    <br/>
-    <table class="pure-table">
-        <thead>
-            <tr>
-               {% if session['isadmin'] == True %}
-                <th> Delete </th>
-                <th> cardid </th>
-                <th> cardtypeid </th>
-                <th> userid </th>
-                <th> expiry </th>
-                <th> balance </th>
-                <th> Update </th>
-               {% else %}
-                <th> cardid </th>
-                <th> cardtypeid </th>
-                <th> userid </th>
-                <th> expiry </th>
-                <th> balance </th>
-               {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-        {% for item in cards %}
-            <tr>
-                {% if session['isadmin'] == True %}
+            var expiryFields = document.querySelectorAll('input[type="date"]');
+            expiryFields.forEach(function(field) {
+                field.min = today;
+            });
+        }
+    </script>
+</head>
+<body onload="setMinDates()">
+
+    {% include 'top.html' %}
+
+    <div id="content">
+        <h1 class="page-title">Cards List Contents</h1>
+        {% if session['isadmin'] == True %}
+            <div style="float: left;">
+                <button class="pure-button" style="float: center;"><a href="{{ url_for('add_card') }}" class="pure-menu-link">Add Card</a></button>
+            </div>
+        {% endif %}
+        <br/>
+        <table class="pure-table">
+            <thead>
+                <tr>
+                   {% if session['isadmin'] == True %}
+                    <th> Delete </th>
+                    <th> cardid </th>
+                    <th> cardtypeid </th>
+                    <th> userid </th>
+                    <th> expiry </th>
+                    <th> balance </th>
+                    <th> Update </th>
+                   {% else %}
+                    <th> cardid </th>
+                    <th> cardtypeid </th>
+                    <th> userid </th>
+                    <th> expiry </th>
+                    <th> balance </th>
+                   {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in cards %}
+                <tr>
+                    {% if session['isadmin'] == True %}
+                        <td>
+                            <button class="pure-button" ><a href="{{ url_for('delete_card', cardid=item.cardid) }}" class="pure-menu-link">Delete</a></button>
+                        </td>
+                        <form name="{{item['cardid']}}_form" class="Update" method="POST" action="{{url_for('update_card')}}">
+                            <input type="hidden" id="cardid" name="cardid" value="{{item['cardid']}}" />
+                            <td><b> {{item['cardid']}} </b></td>
+                            <td> <input type="number" id="cardtypeid" name="cardtypeid" value="{{item['cardtypeid']}}" placeholder="{{item['cardtypeid']}}">
+                            </td>
+                            <td> <input type="text" id="userid" name="userid" value="{{item['userid']}}" placeholder="{{item['userid']}}">
+                            </td>
+                            <td> <input type="date" id="expiry" name="expiry" value="{{item['expiry']}}" placeholder="{{item['expiry']}}">
+                            </td>
+                            <td> <input type="number" id="balance" name="balance" value="{{item['balance']}}" placeholder="{{item['balance']}}">
+                            </td>
+                            <td> <button class="pure-button pure-button-primary" type="submit">Update</button>
+                            </td>
+                        </form>
+                    {% else %}
+                    <td><b> {{item['cardid']}} </b></td>
+                    <td> {{item['cardtypeid']}}</td>
+                    <td> {{item['userid']}}</td>
                     <td>
-                        <button class="pure-button" ><a href="{{ url_for('delete_card', cardid=item.cardid) }}" class="pure-menu-link">Delete</a></button>
+                        {% if session['userid']|string == item['userid']|string %}
+                            {{item['expiry']}}
+                        {% else %}
+                            Not Authorized
+                        {% endif %}
                     </td>
-                    <form name="{{item['cardid']}}_form" class="Update" method="POST" action="{{url_for('update_card')}}">
-                        <input type="hidden" id="cardid" name="cardid" value="{{item['cardid']}}" />
-                        <td><b> {{item['cardid']}} </b></td>
-                        <td> <input type="number" id="cardtypeid" name="cardtypeid" value="{{item['cardtypeid']}}" placeholder="{{item['cardtypeid']}}">
-                        </td>
-                        <td> <input type="text" id="userid" name="userid" value="{{item['userid']}}" placeholder="{{item['userid']}}">
-                        </td>
-                        <td> <input type="date" id="expiry" name="expiry" value="{{item['expiry']}}" placeholder="{{item['expiry']}}">
-                        </td>
-                        <td> <input type="number" id="balance" name="balance" value="{{item['balance']}}" placeholder="{{item['balance']}}">
-                        </td>
-                        <td> <button class="pure-button pure-button-primary" type="submit">Update</button>
-                        </td>
-                    </form>
-                {% else %}
-                <td><b> {{item['cardid']}} </b></td>
-                <td> {{item['cardtypeid']}}</td>
-                <td> {{item['userid']}}</td>
-                <td>
-                    {% if session['userid']|string == item['userid']|string %}
-                        {{item['expiry']}}
-                    {% else %}
-                        Not Authorized
+                    <td>
+                        {% if session['userid']|string == item['userid']|string %}
+                            {{item['balance']}}
+                        {% else %}
+                            Not Authorized
+                        {% endif %}
+                    </td>
                     {% endif %}
-                </td>
-                <td>
-                    {% if session['userid']|string == item['userid']|string %}
-                        {{item['balance']}}
-                    {% else %}
-                        Not Authorized
-                    {% endif %}
-                </td>
-                {% endif %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </body>
 </html>
